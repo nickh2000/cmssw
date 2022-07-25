@@ -109,6 +109,10 @@ private:
   // GEM plots added July 21 2022
   MonitorElement* gemVFATBXPerChamber[36][2][2];
   MonitorElement* gemChamberVFATBX[2][7];
+
+  // GEM plots added July 25 2022
+  MonitorElement* gemPartitionBXPerChamber[36][2][2];
+  MonitorElement* gemPadBXPerChamber[36][2][2];
 };
 
 #endif

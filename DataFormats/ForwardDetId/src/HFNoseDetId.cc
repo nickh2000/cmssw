@@ -11,6 +11,25 @@ HFNoseDetId::HFNoseDetId(uint32_t rawid) : DetId(rawid) {}
 
 HFNoseDetId::HFNoseDetId(DetId::Detector det, int zp, int type, int layer, int waferU, int waferV, int cellU, int cellV)
     : DetId(det, HFNose) {
+<<<<<<< HEAD
+=======
+  int waferUabs(std::abs(waferU)), waferVabs(std::abs(waferV));
+  int waferUsign = (waferU >= 0) ? 0 : 1;
+  int waferVsign = (waferV >= 0) ? 0 : 1;
+  int zside = (zp < 0) ? 1 : 0;
+  int lay = std::max(layer - 1, 0);
+  id_ |= (((cellU & kHFNoseCellUMask) << kHFNoseCellUOffset) | ((cellV & kHFNoseCellVMask) << kHFNoseCellVOffset) |
+          ((waferUabs & kHFNoseWaferUMask) << kHFNoseWaferUOffset) |
+          ((waferUsign & kHFNoseWaferUSignMask) << kHFNoseWaferUSignOffset) |
+          ((waferVabs & kHFNoseWaferVMask) << kHFNoseWaferVOffset) |
+          ((waferVsign & kHFNoseWaferVSignMask) << kHFNoseWaferVSignOffset) |
+          ((lay & kHFNoseLayerMask) << kHFNoseLayerOffset) | ((zside & kHFNoseZsideMask) << kHFNoseZsideOffset) |
+          ((type & kHFNoseTypeMask) << kHFNoseTypeOffset));
+}
+
+HFNoseDetId::HFNoseDetId(int zp, int type, int layer, int waferU, int waferV, int cellU, int cellV)
+    : DetId(Forward, HFNose) {
+>>>>>>> 49fe7d8b637... Add an extra constructor for the HFNoseDetId class
   int waferUabs(std::abs(waferU)), waferVabs(std::abs(waferV));
   int waferUsign = (waferU >= 0) ? 0 : 1;
   int waferVsign = (waferV >= 0) ? 0 : 1;

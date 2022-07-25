@@ -380,11 +380,41 @@ void L1TStage2EMTF::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run&, 
         gemVFATBXPerChamber[ch][hist][lyr]->setAxisTitle("BX", 1);
         gemVFATBXPerChamber[ch][hist][lyr]->setAxisTitle("VFAT #", 2);
 
+        gemPartitionBXPerChamber[ch][hist][lyr] = ibooker.book2D(
+            "gemPartitionBXPerChamber_" + std::to_string(ch) + "_" + std::to_string(hist) + "_" + std::to_string(lyr + 1),
+            "GEM BX vs Partition in Chamber " + std::to_string(ch + 1) + " " + label + " Layer " + std::to_string(lyr + 1),
+            7,
+            -3,
+            4,
+            8,
+            0,
+            8);
+          gemPartitionBXPerChamber[ch][hist][lyr]->setAxisTitle("BX", 1);
+          gemPartitionBXPerChamber[ch][hist][lyr]->setAxisTitle("Partition", 2);
+
+        gemPadBXPerChamber[ch][hist][lyr] = ibooker.book2D(
+            "gemPadBXPerChamber_" + std::to_string(ch) + "_" + std::to_string(hist) + "_" + std::to_string(lyr + 1),
+            "GEM BX vs Pad in Chamber " + std::to_string(ch + 1) + " " + label + " Layer " + std::to_string(lyr + 1),
+            7,
+            -3,
+            4,
+            nStrips,
+            0,
+            nStrips);
+          gemPadBXPerChamber[ch][hist][lyr]->setAxisTitle("BX", 1);
+          gemPadBXPerChamber[ch][hist][lyr]->setAxisTitle("Pad", 2);
+
+                          
+
         for (int bin = 1; bin <= 24; ++bin) {
           gemVFATBXPerChamber[ch][hist][lyr]->setBinLabel(bin, std::to_string(bin - 1), 2);
+          gemPartitionBXPerChamber[ch][hist][lyr]->setBinLabel(bin, std::to_string(bin - 1), 2);
         }
+
         for (int bx = 1; bx <= 7; ++bx) {
           gemVFATBXPerChamber[ch][hist][lyr]->setBinLabel(bx, std::to_string(bx - 4), 1);
+            gemPartitionBXPerChamber[ch][hist][lyr]->setBinLabel(bx, std::to_string(bx - 4), 1);
+            gemPadBXPerChamber[ch][hist][lyr]->setBinLabel(bx, std::to_string(bx - 4), 1);
         }
       }
     }
@@ -965,6 +995,9 @@ void L1TStage2EMTF::analyze(const edm::Event& e, const edm::EventSetup& c) {
         gemHitOccupancy->Fill(chamber_bin(1, 1, chamber), (endcap > 0) ? 1.5 : 0.5);  // follow CSC convention
         //Added plots 07-21-22 ***
         gemVFATBXPerChamber[chamber - 1][hist_index][layer]->Fill(Hit->BX(), vfat);
+        //Added plots 07-25-22
+        gemPartitionBXPerChamber[chamber - 1][hist_index][layer]->Fill(Hit->BX(), Hit->Partition());
+        gemPadBXPerChamber[chamber - 1][hist_index][layer]->Fill(Hit->BX(), Hit->Pad());
         //indexed plots by BX 07-21-22
         gemChamberVFATBX[hist_index][Hit->BX() + 3]->Fill(chamber_bin(1, 1, chamber), vfat);
       }
